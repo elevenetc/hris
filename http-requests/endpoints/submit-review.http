@@ -1,0 +1,7 @@
+### Submit a review (makes it immutable)
+POST http://{{host}}:{{port}}/reviews/1/submit
+
+### Optional environment defaults for IntelliJ HTTP Client
+### @name env
+@host=localhost
+@port=8080

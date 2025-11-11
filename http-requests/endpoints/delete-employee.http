@@ -1,0 +1,10 @@
+### Delete an employee (without subordinates)
+DELETE http://{{host}}:{{port}}/employees/1
+
+### Delete an employee with cascade (removes employee and all subordinates)
+DELETE http://{{host}}:{{port}}/employees/1?cascade=true
+
+### Optional environment defaults for IntelliJ HTTP Client
+### @name env
+@host=localhost
+@port=8080

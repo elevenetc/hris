@@ -1,0 +1,114 @@
+### Scenario: Complete notification workflow
+### This demonstrates: create employees -> trigger notifications -> check -> mark read -> delete
+
+### Step 1: Create a reviewer
+POST http://localhost:8080/employees
+Content-Type: application/json
+
+{
+  "firstName": "Alice",
+  "lastName": "Reviewer",
+  "email": "alice.reviewer@company.com",
+  "position": "Engineering Manager"
+}
+
+> {%
+    client.global.set("reviewerId", response.body.id);
+%}
+
+### Step 2: Create an employee
+POST http://localhost:8080/employees
+Content-Type: application/json
+
+{
+  "firstName": "Bob",
+  "lastName": "Employee",
+  "email": "bob.employee@company.com",
+  "position": "Software Engineer",
+  "managerId": {{reviewerId}}
+}
+
+> {%
+    client.global.set("employeeId", response.body.id);
+%}
+
+### Step 3: Create a performance review (triggers notification)
+POST http://localhost:8080/employees/{{employeeId}}/reviews
+Content-Type: application/json
+
+{
+  "reviewerId": {{reviewerId}},
+  "reviewDate": "2025-01-15T10:00:00Z",
+  "performanceScore": 8,
+  "softSkillsScore": 9,
+  "independenceScore": 7,
+  "aspirationForGrowthScore": 8,
+  "notes": "Excellent performance!"
+}
+
+> {%
+    client.global.set("reviewId", response.body.id);
+%}
+
+### Step 4: Submit the review (triggers notification for employee)
+POST http://localhost:8080/reviews/{{reviewId}}/submit
+
+### Step 5: Get all notifications for the reviewer (should see draft created notification)
+GET http://localhost:8080/notifications?userId={{reviewerId}}
+
+### Step 6: Get all notifications for the employee (should see review submitted notification)
+GET http://localhost:8080/notifications?userId={{employeeId}}
+
+> {%
+    client.global.set("notificationId", response.body[0].id);
+%}
+
+### Step 7: Get unread notification count for employee
+GET http://localhost:8080/notifications/unread/count?userId={{employeeId}}
+
+### Step 8: Get only unread notifications for employee
+GET http://localhost:8080/notifications?userId={{employeeId}}&unreadOnly=true
+
+### Step 9: Mark a notification as read
+PATCH http://localhost:8080/notifications/{{notificationId}}/read?userId={{employeeId}}
+
+### Step 10: Verify unread count decreased
+GET http://localhost:8080/notifications/unread/count?userId={{employeeId}}
+
+### Step 11: Get all notifications with pagination
+GET http://localhost:8080/notifications?userId={{employeeId}}&limit=5&offset=0
+
+### Step 12: Create multiple reviews to see multiple notifications
+POST http://localhost:8080/employees/{{employeeId}}/reviews
+Content-Type: application/json
+
+{
+  "reviewerId": {{reviewerId}},
+  "reviewDate": "2025-02-01T10:00:00Z",
+  "performanceScore": 9,
+  "softSkillsScore": 9,
+  "independenceScore": 8,
+  "aspirationForGrowthScore": 9
+}
+
+> {%
+    client.global.set("reviewId2", response.body.id);
+%}
+
+### Step 13: Submit the second review
+POST http://localhost:8080/reviews/{{reviewId2}}/submit
+
+### Step 14: Check notifications again (should have multiple)
+GET http://localhost:8080/notifications?userId={{employeeId}}
+
+### Step 15: Mark all notifications as read
+PATCH http://localhost:8080/notifications/read-all?userId={{employeeId}}
+
+### Step 16: Verify all are read (count should be 0)
+GET http://localhost:8080/notifications/unread/count?userId={{employeeId}}
+
+### Step 17: Delete a notification
+DELETE http://localhost:8080/notifications/{{notificationId}}?userId={{employeeId}}
+
+### Step 18: Verify deletion
+GET http://localhost:8080/notifications?userId={{employeeId}}

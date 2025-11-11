@@ -1,0 +1,7 @@
+### Mark all notifications as read for a user
+PATCH http://{{host}}:{{port}}/notifications/read-all?userId=1
+
+### Optional environment defaults for IntelliJ HTTP Client
+### @name env
+@host=localhost
+@port=8080

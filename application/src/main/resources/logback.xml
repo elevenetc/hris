@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Application loggers -->
+    <logger name="org.jetbrains.hris" level="INFO"/>
+
+    <!-- Ktor logging -->
+    <logger name="io.ktor" level="INFO"/>
+    <logger name="io.ktor.routing" level="DEBUG"/>
+
+    <!-- Database logging -->
+    <logger name="Exposed" level="INFO"/>
+
+    <!-- HikariCP connection pool -->
+    <logger name="com.zaxxer.hikari" level="INFO"/>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

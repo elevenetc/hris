@@ -1,0 +1,7 @@
+### Get review by id
+GET http://{{host}}:{{port}}/reviews/1
+
+### Optional environment defaults for IntelliJ HTTP Client
+### @name env
+@host=localhost
+@port=8080

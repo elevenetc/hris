@@ -1,0 +1,7 @@
+### Delete a notification
+DELETE http://{{host}}:{{port}}/notifications/1?userId=1
+
+### Optional environment defaults for IntelliJ HTTP Client
+### @name env
+@host=localhost
+@port=8080

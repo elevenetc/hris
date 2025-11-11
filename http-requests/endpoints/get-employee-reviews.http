@@ -1,0 +1,16 @@
+### Get all reviews for an employee
+GET http://{{host}}:{{port}}/employees/1/reviews
+
+### Get reviews with pagination
+GET http://{{host}}:{{port}}/employees/1/reviews?limit=10&offset=0
+
+### Get only DRAFT reviews
+GET http://{{host}}:{{port}}/employees/1/reviews?status=DRAFT
+
+### Get reviews within date range
+GET http://{{host}}:{{port}}/employees/1/reviews?fromDate=2025-01-01T00:00:00Z&toDate=2025-12-31T23:59:59Z
+
+### Optional environment defaults for IntelliJ HTTP Client
+### @name env
+@host=localhost
+@port=8080

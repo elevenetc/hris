@@ -1,0 +1,148 @@
+### Scenario: Create a company organizational hierarchy with employees
+### This demonstrates creating a hierarchical management structure:
+### CEO -> VP of Engineering -> Team Managers -> Engineers
+
+### Step 1: Create CEO
+POST http://localhost:8080/employees
+Content-Type: application/json
+
+{
+  "firstName": "Alice",
+  "lastName": "Johnson",
+  "email": "alice.johnson@acme.com",
+  "position": "CEO"
+}
+
+> {%
+    client.global.set("ceoId", response.body.id);
+%}
+
+### Step 2: Create VP of Engineering
+POST http://localhost:8080/employees
+Content-Type: application/json
+
+{
+  "firstName": "Bob",
+  "lastName": "Smith",
+  "email": "bob.smith@acme.com",
+  "position": "VP of Engineering",
+  "managerId": {{ceoId}}
+}
+
+> {%
+    client.global.set("vpEngId", response.body.id);
+%}
+
+### Step 3: Create Platform Team Manager
+POST http://localhost:8080/employees
+Content-Type: application/json
+
+{
+  "firstName": "Charlie",
+  "lastName": "Davis",
+  "email": "charlie.davis@acme.com",
+  "position": "Engineering Manager - Platform",
+  "managerId": {{vpEngId}}
+}
+
+> {%
+    client.global.set("platformManagerId", response.body.id);
+%}
+
+### Step 4: Create Platform Engineer 1
+POST http://localhost:8080/employees
+Content-Type: application/json
+
+{
+  "firstName": "Diana",
+  "lastName": "Williams",
+  "email": "diana.williams@acme.com",
+  "position": "Senior Platform Engineer",
+  "managerId": {{platformManagerId}}
+}
+
+> {%
+    client.global.set("platformEng1Id", response.body.id);
+%}
+
+### Step 5: Create Platform Engineer 2
+POST http://localhost:8080/employees
+Content-Type: application/json
+
+{
+  "firstName": "Ethan",
+  "lastName": "Brown",
+  "email": "ethan.brown@acme.com",
+  "position": "Platform Engineer",
+  "managerId": {{platformManagerId}}
+}
+
+> {%
+    client.global.set("platformEng2Id", response.body.id);
+%}
+
+### Step 6: Create Frontend Team Manager
+POST http://localhost:8080/employees
+Content-Type: application/json
+
+{
+  "firstName": "Fiona",
+  "lastName": "Miller",
+  "email": "fiona.miller@acme.com",
+  "position": "Engineering Manager - Frontend",
+  "managerId": {{vpEngId}}
+}
+
+> {%
+    client.global.set("frontendManagerId", response.body.id);
+%}
+
+### Step 7: Create Frontend Engineer 1
+POST http://localhost:8080/employees
+Content-Type: application/json
+
+{
+  "firstName": "George",
+  "lastName": "Wilson",
+  "email": "george.wilson@acme.com",
+  "position": "Senior Frontend Engineer",
+  "managerId": {{frontendManagerId}}
+}
+
+> {%
+    client.global.set("frontendEng1Id", response.body.id);
+%}
+
+### Step 8: Create Frontend Engineer 2
+POST http://localhost:8080/employees
+Content-Type: application/json
+
+{
+  "firstName": "Hannah",
+  "lastName": "Moore",
+  "email": "hannah.moore@acme.com",
+  "position": "Frontend Engineer",
+  "managerId": {{frontendManagerId}}
+}
+
+> {%
+    client.global.set("frontendEng2Id", response.body.id);
+%}
+
+### Step 9: Get CEO's full organizational tree
+GET http://localhost:8080/employees/{{ceoId}}/subordinates-full-tree
+
+### Step 10: Get VP's subordinates
+GET http://localhost:8080/employees/{{vpEngId}}/subordinates
+
+### Step 11: Get Platform Manager's direct reports
+GET http://localhost:8080/employees/{{platformManagerId}}/subordinates
+
+### Step 12: Get Frontend Manager's direct reports
+GET http://localhost:8080/employees/{{frontendManagerId}}/subordinates
+
+### Step 13: Get CEO's homepage (shows organizational context)
+GET http://localhost:8080/employees/{{ceoId}}/homepage
+
+### Step 14: Get a mid-level employee's homepage (Platform Engineer)
+GET http://localhost:8080/employees/{{platformEng1Id}}/homepage

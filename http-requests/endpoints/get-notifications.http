@@ -1,0 +1,13 @@
+### Get all notifications for a user
+GET http://{{host}}:{{port}}/notifications?userId=1
+
+### Get unread notifications only
+GET http://{{host}}:{{port}}/notifications?userId=1&unreadOnly=true
+
+### Get notifications with pagination
+GET http://{{host}}:{{port}}/notifications?userId=1&limit=5&offset=0
+
+### Optional environment defaults for IntelliJ HTTP Client
+### @name env
+@host=localhost
+@port=8080

@@ -1,0 +1,12 @@
+### Health check
+# Returns database and cache status with metrics
+# Response includes:
+# - status: overall health (ok/unhealthy)
+# - database: database connection status (ok/error)
+# - cache: Redis cache metrics (status, hits, misses, errors, hitRate)
+GET http://{{host}}:{{port}}/health
+
+### Optional environment defaults for IntelliJ HTTP Client
+### @name env
+@host=localhost
+@port=8080

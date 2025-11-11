@@ -1,0 +1,7 @@
+### Get employee homepage - organizational context (employee, manager, peers, subordinates)
+GET http://{{host}}:{{port}}/employees/1/homepage
+
+### Optional environment defaults for IntelliJ HTTP Client
+### @name env
+@host=localhost
+@port=8080

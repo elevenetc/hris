@@ -1,0 +1,13 @@
+### Update a review (only works for DRAFT reviews)
+PUT http://{{host}}:{{port}}/reviews/1
+Content-Type: application/json
+
+{
+  "performanceScore": 9,
+  "notes": "Updated: Exceptional performance on Q1 deliverables."
+}
+
+### Optional environment defaults for IntelliJ HTTP Client
+### @name env
+@host=localhost
+@port=8080

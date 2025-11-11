@@ -1,0 +1,10 @@
+### Get direct subordinates of a manager
+GET http://{{host}}:{{port}}/employees/1/subordinates
+
+### Get subordinates of an employee with no reports (returns empty array)
+GET http://{{host}}:{{port}}/employees/5/subordinates
+
+### Optional environment defaults for IntelliJ HTTP Client
+### @name env
+@host=localhost
+@port=8080

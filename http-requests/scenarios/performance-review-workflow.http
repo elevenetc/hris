@@ -1,0 +1,139 @@
+### Scenario: Complete performance review lifecycle
+### This demonstrates: create employees -> create review -> update -> submit -> attempt changes
+
+### Step 1: Create a reviewer (manager)
+POST http://localhost:8080/employees
+Content-Type: application/json
+
+{
+  "firstName": "Jane",
+  "lastName": "Manager",
+  "email": "jane.manager@company.com",
+  "position": "Engineering Manager"
+}
+
+> {%
+    client.global.set("reviewerId", response.body.id);
+%}
+
+### Step 2: Create an employee to be reviewed
+POST http://localhost:8080/employees
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Developer",
+  "email": "john.dev@company.com",
+  "position": "Senior Engineer",
+  "managerId": {{reviewerId}}
+}
+
+> {%
+    client.global.set("employeeId", response.body.id);
+%}
+
+### Step 3: Create a performance review (DRAFT)
+POST http://localhost:8080/employees/{{employeeId}}/reviews
+Content-Type: application/json
+
+{
+  "reviewerId": {{reviewerId}},
+  "reviewDate": "2025-01-15T10:00:00Z",
+  "performanceScore": 8,
+  "softSkillsScore": 9,
+  "independenceScore": 7,
+  "aspirationForGrowthScore": 8,
+  "notes": "Excellent work on the microservices refactoring. Shows great initiative and technical skills. Could improve on documentation."
+}
+
+> {%
+    client.global.set("reviewId", response.body.id);
+%}
+
+### Step 4: Get the review
+GET http://localhost:8080/reviews/{{reviewId}}
+
+### Step 5: Update the review (only works for DRAFT)
+PUT http://localhost:8080/reviews/{{reviewId}}
+Content-Type: application/json
+
+{
+  "performanceScore": 9,
+  "notes": "Updated: Exceptional performance on Q1 deliverables. Excellent collaboration with the team."
+}
+
+### Step 6: Get all reviews for the employee
+GET http://localhost:8080/employees/{{employeeId}}/reviews
+
+### Step 7: Get only DRAFT reviews
+GET http://localhost:8080/employees/{{employeeId}}/reviews?status=DRAFT
+
+### Step 8: Submit the review (makes it immutable)
+POST http://localhost:8080/reviews/{{reviewId}}/submit
+
+### Step 9: Try to update a SUBMITTED review (should fail with 400)
+PUT http://localhost:8080/reviews/{{reviewId}}
+Content-Type: application/json
+
+{
+  "performanceScore": 10
+}
+
+### Step 10: Try to delete a SUBMITTED review (should fail with 400)
+DELETE http://localhost:8080/reviews/{{reviewId}}
+
+### Step 11: Create another DRAFT review for deletion test
+POST http://localhost:8080/employees/{{employeeId}}/reviews
+Content-Type: application/json
+
+{
+  "reviewerId": {{reviewerId}},
+  "reviewDate": "2025-02-01T10:00:00Z",
+  "performanceScore": 7,
+  "softSkillsScore": 8,
+  "independenceScore": 7,
+  "aspirationForGrowthScore": 9,
+  "notes": "Good progress on learning new technologies."
+}
+
+> {%
+    client.global.set("draftReviewId", response.body.id);
+%}
+
+### Step 12: Delete the DRAFT review (should succeed)
+DELETE http://localhost:8080/reviews/{{draftReviewId}}
+
+### Step 13: Verify deletion (should return 404)
+GET http://localhost:8080/reviews/{{draftReviewId}}
+
+### Step 14: Test validation - create review with invalid score (should fail with 400)
+POST http://localhost:8080/employees/{{employeeId}}/reviews
+Content-Type: application/json
+
+{
+  "reviewerId": {{reviewerId}},
+  "reviewDate": "2025-03-01T10:00:00Z",
+  "performanceScore": 11,
+  "softSkillsScore": 8,
+  "independenceScore": 7,
+  "aspirationForGrowthScore": 9
+}
+
+### Step 15: Test validation - create review with score 0 (should fail with 400)
+POST http://localhost:8080/employees/{{employeeId}}/reviews
+Content-Type: application/json
+
+{
+  "reviewerId": {{reviewerId}},
+  "reviewDate": "2025-03-01T10:00:00Z",
+  "performanceScore": 8,
+  "softSkillsScore": 0,
+  "independenceScore": 7,
+  "aspirationForGrowthScore": 9
+}
+
+### Step 16: Get reviews with pagination
+GET http://localhost:8080/employees/{{employeeId}}/reviews?limit=10&offset=0
+
+### Step 17: Get reviews within date range
+GET http://localhost:8080/employees/{{employeeId}}/reviews?fromDate=2025-01-01T00:00:00Z&toDate=2025-12-31T23:59:59Z

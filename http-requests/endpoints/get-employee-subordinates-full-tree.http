@@ -1,0 +1,9 @@
+### Get full organizational tree starting from an employee
+# Returns nested hierarchy with all subordinates recursively
+# WARNING: This can return large payloads for top-level managers
+GET http://{{host}}:{{port}}/employees/1/subordinates-full-tree
+
+### Optional environment defaults for IntelliJ HTTP Client
+### @name env
+@host=localhost
+@port=8080

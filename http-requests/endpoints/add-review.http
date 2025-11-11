@@ -1,0 +1,18 @@
+### Create a performance review
+POST http://{{host}}:{{port}}/employees/1/reviews
+Content-Type: application/json
+
+{
+  "reviewerId": 2,
+  "reviewDate": "2025-01-15T10:00:00Z",
+  "performanceScore": 8,
+  "softSkillsScore": 9,
+  "independenceScore": 7,
+  "aspirationForGrowthScore": 8,
+  "notes": "Excellent work this quarter."
+}
+
+### Optional environment defaults for IntelliJ HTTP Client
+### @name env
+@host=localhost
+@port=8080

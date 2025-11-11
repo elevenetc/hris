@@ -1,0 +1,10 @@
+### Get employee's manager
+GET http://{{host}}:{{port}}/employees/2/manager
+
+### Get manager of a root employee (should return 404)
+GET http://{{host}}:{{port}}/employees/1/manager
+
+### Optional environment defaults for IntelliJ HTTP Client
+### @name env
+@host=localhost
+@port=8080

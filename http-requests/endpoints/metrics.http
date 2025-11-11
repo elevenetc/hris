@@ -1,0 +1,7 @@
+### Get Prometheus metrics
+GET http://{{host}}:{{port}}/metrics
+
+### Optional environment defaults for IntelliJ HTTP Client
+### @name env
+@host=localhost
+@port=8080

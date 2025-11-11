@@ -1,0 +1,27 @@
+### Add a root employee (no manager)
+POST http://{{host}}:{{port}}/employees
+Content-Type: application/json
+
+{
+  "firstName": "Ada",
+  "lastName": "Lovelace",
+  "email": "ada.lovelace@example.com",
+  "position": "Engineer"
+}
+
+### Add an employee with a manager
+POST http://{{host}}:{{port}}/employees
+Content-Type: application/json
+
+{
+  "firstName": "Alan",
+  "lastName": "Turing",
+  "email": "alan.turing@example.com",
+  "position": "Engineer",
+  "managerId": 1
+}
+
+### Optional environment defaults for IntelliJ HTTP Client
+### @name env
+@host=localhost
+@port=8080
